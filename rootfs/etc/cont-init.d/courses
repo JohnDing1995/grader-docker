@@ -1,0 +1,11 @@
+#!/bin/sh
+
+. /usr/local/lib/cont-init-functions.sh
+ENSURE_DIR_MODE=2755
+ENSURE_DIR_USER=grader
+ENSURE_DIR_GROUP=nogroup
+
+ensure_dir /local/courses
+
+set -x
+ln -s /local/courses /srv/grader/exercises

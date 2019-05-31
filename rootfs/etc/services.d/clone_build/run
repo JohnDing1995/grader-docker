@@ -1,0 +1,20 @@
+#!/usr/bin/with-contenv /bin/bash
+
+
+# Move stderro to out, so it's handled by logger
+#fdmove -c 2 1
+
+
+# run shell in bg
+#background -d {
+#	bash /srv/grader/cron_pull_build.sh
+#}
+
+
+[ -e /local/venv_grader/bin/activate ] && . /local/venv_grader/bin/activate
+
+sleep 10
+while true; do
+  sleep 1
+  /srv/grader/gitmanager/cron.sh
+done
