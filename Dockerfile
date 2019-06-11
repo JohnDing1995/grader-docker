@@ -1,5 +1,5 @@
 FROM apluslms/run-mooc-grader:1.4
-COPY *.whl /roman/
+COPY roman_config.yml *.whl /roman/
 
 RUN apt_install sqlite3 libsqlite3-dev sudo \
 && pip3 install Docker \
@@ -11,5 +11,5 @@ COPY local_settings.py /srv/grader/
 COPY cron_pull_build.sh cron.sh /srv/grader/gitmanager/
 COPY rootfs/etc/services.d/clone_build /etc/services.d/clone_build
 COPY rootfs/etc/cont-init.d /etc/cont-init.d
-ENV DOCKER_HOST_PATH=/var/lib/docker/volumes/aplus_data/_data/grader/courses/
+ENV DOCKER_DIRECTORY_MAP='{"/data/":"/var/lib/docker/volumes/aplus_data/_data/"}'
 

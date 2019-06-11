@@ -5,10 +5,10 @@ key=$2
 id=$3
 url=$4
 branch=$5
-DOCKER_HOST_PATH=$6
 
+echo "$DOCKER_HOST_PATH"
 echo "Processing key=$key id=$id url=$url branch=$branch python=$TRY_PYTHON host_path=$DOCKER_HOST_PATH"
-export DOCKER_HOST_PATH=$DOCKER_HOST_PATH$key
+DOCKER_HOST_PATH=$DOCKER_HOST_PATH$key
 if [ -z "$key" -o -z "$id" -o -z "$url" -o -z "$branch" ]; then
     echo "  Some arguments are missing, skipping..."
 fi
@@ -22,6 +22,8 @@ fi
 if [ -f $TRY_PYTHON ]; then
   source $TRY_PYTHON
 fi
+
+
 
 # Update from git origin and move to dir.
 dir=$CDIR/$key
@@ -42,20 +44,15 @@ else
   pushd $dir
 fi
 
-
-
 # Build course material.
 
-if [ -e roman.yml ] || [ -e course.yml ] || [ -e roman.yaml ] || [ -e course.yaml ]; then
+if [ -e /roman/roman_config.yml ]; then
     echo "### Detected normal roman YAML file, running roman directly"
-    roman
+    roman -c /roman/roman_config.yml
 else
-    roman -f ../../legacy_roman.yml
+    roman
 fi
 popd
-
-
-
 
 # Link to static.
 static_dir=`python3 gitmanager/cron.py static $key`

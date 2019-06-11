@@ -1,12 +1,9 @@
 #!/bin/bash
-
 FLAG="/tmp/mooc-grader-manager-clean"
 LOG="/tmp/mooc-grader-log"
 SQL="sqlite3 -batch -noheader -column /local/grader/db.sqlite3"
 TRY_PYTHON="/srv/grader/venv/bin/activate"
-echo $DOCKER_HOST_PATH
 
-echo 'local setting is '$GRADER_LOCAL_SETTINGS
 cd `dirname $0`/..
 if [ -d exercises ]; then
   CDIR=exercises
@@ -32,7 +29,9 @@ for key in $keys; do
   echo "Update $key" > $LOG
   vals=(`$SQL "select id,git_origin,git_branch from gitmanager_courserepo where key='$key';"`)
   id=${vals[0]}
-  sudo -u $USER -H gitmanager/cron_pull_build.sh $TRY_PYTHON $key ${vals[@]} $DOCKER_HOST_PATH >> $LOG 2>&1 || continue
+  echo "---------------------------------------------------------------------"
+  export DOCKER_HOST_PATH
+  sudo -u $USER -H -E ./gitmanager/cron_pull_build.sh $TRY_PYTHON $key ${vals[@]} >> $LOG 2>&1 || continue
 
   # Update sandbox.
   if [ -d /var/sandbox_$key ]; then
